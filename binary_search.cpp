@@ -103,5 +103,36 @@ void binary_search::fileCycle(bstNode* currFile, ofstream& fOut) {
 }
 
 void binary_search::delete(string keyDelete) {
+  deleteCycle(root, keyDelete);
+}
+void binary_search::deleteCycle(bstNode* currDel, string keyDel) {
+  if (currDel == NULL)
+    cout << "Error #1: Key Not Found." << endl;
+  else if(currDel < keyDel)
+    deleteCycle(currDel->right, keyDel);
+  else if(currDel > keyDel)
+    deleteCycle(currDel->left, keyDel);
+  else {
+    bstNode* temp= currDel->right;
 
+    if(currDel->left==NULL  && currDel->right==NULL) {
+      delete currDel;
+      currDel = temp;
+    }
+    else if(currDel->right != NULL && currDel->left == NULL) {
+      delete currDel;
+      currDel = temp;
+    }
+    else if(currDel->left != NULL && currDel->right == NULL) {
+      temp = currDel->left;
+      delete currDel;
+      currDel = temp;
+    }
+    else {
+      while(temp->left != NULL)
+	temp = temp->left;
+      currDel->key = temp->key;
+      currDel->data = temp->data;
+    }
+  }
 }

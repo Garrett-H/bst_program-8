@@ -38,5 +38,6 @@ class binary_seach
   void findCycle();
   void printCycle(bstNode* currPrint);
   void fileCycle(bstNode* currFile, std::ofstream& fOut);
+  void deleteCycle(bstNode* currDel, std::string keyDel);
   
 #endif // BINARY_SEARCH_H
