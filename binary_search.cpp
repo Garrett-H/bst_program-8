@@ -12,7 +12,9 @@
 using namespace std;
 
 binary_search::binary_search(){
-  root = NULL;
+  root     = NULL;
+  lowest   = NULL;
+  highest  = NULL:
   size_bst = 0;
 
 }
@@ -27,7 +29,22 @@ void binary_search::set(string keyInsert, int dataInsert){
   bstNode* temp = new bstNode;
   temp->key  = keyInsert;
   temp->data = dataInsert;
-  setCycle(root, temp);
+  if(root == NULL) {
+    root = temp;
+    lowest = temp;
+    highest = temp;
+  }
+  else if(temp->key < lowest->key) {
+    lowest->left = temp;
+    lowest = temp;
+  }
+  else if(temp->key > highest->key) {
+    highest->right = temp;
+    highest = temp;
+  }
+  else
+    setCycle(root, temp);
+  
 }
 void binary_search::setCycle(bstNode* currSet, bstNode* tempInsert){
   if(currSet == NULL) {
@@ -56,18 +73,18 @@ void binary_search::print() {
 }
 void binary_search::printCycle(bstNode* currPrint) {
   if(currPrint != NULL) {
-    printCycle(currPrint->left);                                           //move left, if can
-    cout << "( " << currPrint->key << ", " << currPrint->data << " )" << '\n';  //print itself
-    printCycle(currPrint->right);                                          //move right, if can
+    printCycle(currPrint->left);                                          //move left, if can
+    cout << "( " << currPrint->key << ", " << currPrint->data << " )\n";  //print itself
+    printCycle(currPrint->right);                                         //move right, if can
   }
 }
 
 void binary_search::min() {
-
+  cout << "( " << lowest->key << ", " << lowest->data << " )\n";
 }
 
 void binary_search::max() {
-
+  cout << "( " << highest->key << ", " << highest->data << " )\n";
 }
 
 void binary_search::save_file(string fileInsert) {

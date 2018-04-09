@@ -30,9 +30,10 @@ class binary_seach
     int data;
     bstNode *left, *right;
   }
-  int size_bst;
   bstNode* root;
-
+  bstNode* lowest;
+  bstNode* highest;
+  
   void setCycle(bstNode* currSet, bstNode* tempInsert);
   void findCycle();
   void printCycle(bstNode* currPrint);
