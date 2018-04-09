@@ -32,6 +32,9 @@ class binary_seach
   }
   int size_bst;
   bstNode* root;
-};
 
+  void setCycle(bstNode* currSet, bstNode* tempInsert);
+  void findCycle();
+  void printCycle(bstNode* currPrint);
+  
 #endif // BINARY_SEARCH_H

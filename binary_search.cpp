@@ -12,6 +12,8 @@
 using namespace std;
 
 binary_search::binary_search(){
+  root = NULL;
+  size_bst = 0;
 
 }
 
@@ -19,16 +21,45 @@ binary_search::~binary_search(){
 
 }
 
-void binary_search::set(string keyInsert, int dataInsert){
 
+void binary_search::set(string keyInsert, int dataInsert){
+  //make node to be inserted
+  bstNode* temp = new bstNode;
+  temp->key  = keyInsert;
+  temp->data = dataInsert;
+  setCycle(root, temp);
 }
+void binary_search::setCycle(bstNode* currSet, bstNode* tempInsert){
+  if(currSet == NULL) {
+    currSet = new bstNode;
+    currSet = tempInsert;
+  }
+  //if the key is the same as current
+  else if(tempInsert->key == currSet->key)
+    currSet->data = tempInsert->data;
+  //if the key is less than the current
+  else if(tempInsert->key < currSet->key)
+    setCycle(currSet->left, tempInsert);
+  //if the key is more than the current
+  else
+    setCycle(currSet->right, tempInsert);
+}
+
 
 int binary_search::find(string keyFind) {
 
 }
 
 void binary_search::print() {
-
+  printCycle(root);  //cycles through entire tree & prints the data for each in sorted order
+  cout << endl;      //used for easier reading
+}
+void binary_search::printCycle(bstNode* currPrint) {
+  if(currPrint != NULL) {
+    printCycle(currPrint->left);                                           //move left, if can
+    cout << "( " << currPrint->key << ", " << currPrint->data << " )" << '\n';  //print itself
+    printCycle(currPrint->right);                                          //move right, if can
+  }
 }
 
 void binary_search::min() {
