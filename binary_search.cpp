@@ -15,7 +15,6 @@ binary_search::binary_search(){
   root     = NULL;
   lowest   = NULL;
   highest  = NULL:
-  size_bst = 0;
 
 }
 
@@ -67,6 +66,7 @@ int binary_search::find(string keyFind) {
 
 }
 
+
 void binary_search::print() {
   printCycle(root);  //cycles through entire tree & prints the data for each in sorted order
   cout << endl;      //used for easier reading
@@ -79,6 +79,7 @@ void binary_search::printCycle(bstNode* currPrint) {
   }
 }
 
+
 void binary_search::min() {
   cout << "( " << lowest->key << ", " << lowest->data << " )\n";
 }
@@ -88,7 +89,17 @@ void binary_search::max() {
 }
 
 void binary_search::save_file(string fileInsert) {
-
+  ofstream fOut;
+  fOut.open(fileInsert.c_str());
+  fileCycle(root, fOut);
+  fOut.close();
+}
+void binary_search::fileCycle(bstNode* currFile, ofstream& fOut) {
+  if(currFile != NULL) {
+    fileCycle(currFile->left, fOut);
+    fOut << currFile->key << " " << currFile->data << '\n';
+    fileCycle(currFile->right, fOut);
+  }
 }
 
 void binary_search::delete(string keyDelete) {
