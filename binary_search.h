@@ -33,9 +33,10 @@ class binary_seach
   bstNode* root;
   bstNode* lowest;
   bstNode* highest;
-  
+
+  void deconCycle(bstNode* currDecon);
   void setCycle(bstNode* currSet, bstNode* tempInsert);
-  void findCycle();
+  void findCycle(bstNode* currFind, std::string keyFind);
   void printCycle(bstNode* currPrint);
   void fileCycle(bstNode* currFile, std::ofstream& fOut);
   void deleteCycle(bstNode* currDel, std::string keyDel);

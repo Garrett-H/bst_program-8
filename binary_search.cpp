@@ -18,8 +18,16 @@ binary_search::binary_search(){
 
 }
 
-binary_search::~binary_search(){
 
+binary_search::~binary_search(){
+  deconCycle(root);
+}
+void binary_search::deconCycle(bstNode* currDecon) {
+  if(currDecon != NULL) {
+    deconCycle(currDecon->left);
+    deconCycle(currDecon->right);
+    delete currDecon;
+  }
 }
 
 
@@ -63,7 +71,25 @@ void binary_search::setCycle(bstNode* currSet, bstNode* tempInsert){
 
 
 int binary_search::find(string keyFind) {
-
+  char except = 'a';
+  try{
+  int valFound = findCycle(root, keyFind);
+  }
+  catch(except)
+    cerr << "Error #2: No Item Found\n";
+  return valFound;
+}
+int binary_search::findCycle(bstNode* currFind, string keyFind) {
+  if(currFind == NULL)
+    throw "Error #2: No Item Found\n";
+  else if(currFind->key == keyFind)
+    return currFind->value;
+  else{
+    if(currFind->key < keyFind)
+      findCycle(currFind->right);
+    else
+      findCycle(currFind->left);
+  }
 }
 
 
@@ -84,9 +110,11 @@ void binary_search::min() {
   cout << "( " << lowest->key << ", " << lowest->data << " )\n";
 }
 
+
 void binary_search::max() {
   cout << "( " << highest->key << ", " << highest->data << " )\n";
 }
+
 
 void binary_search::save_file(string fileInsert) {
   ofstream fOut;
@@ -102,15 +130,16 @@ void binary_search::fileCycle(bstNode* currFile, ofstream& fOut) {
   }
 }
 
+
 void binary_search::delete(string keyDelete) {
   deleteCycle(root, keyDelete);
 }
 void binary_search::deleteCycle(bstNode* currDel, string keyDel) {
   if (currDel == NULL)
     cout << "Error #1: Key Not Found." << endl;
-  else if(currDel < keyDel)
+  else if(currDel->key < keyDel)
     deleteCycle(currDel->right, keyDel);
-  else if(currDel > keyDel)
+  else if(currDel->key > keyDel)
     deleteCycle(currDel->left, keyDel);
   else {
     bstNode* temp= currDel->right;
