@@ -10,7 +10,7 @@ CFLAGS= -c -Wall $(DEBUG)
 all: $(TARGET)
 
 $(TARGET): driver.o binary_search.o
-	   $(CC) main.o binary_search.o -o $(TARGET)
+	   $(CC) driver.o binary_search.o -o $(TARGET)
 
 driver.o: driver.cpp binary_search.h
 	$(CC) $(CFLAGS) driver.cpp

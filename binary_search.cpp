@@ -14,8 +14,7 @@ using namespace std;
 binary_search::binary_search(){
   root     = NULL;
   lowest   = NULL;
-  highest  = NULL:
-
+  highest  = NULL;
 }
 
 
@@ -33,11 +32,14 @@ void binary_search::deconCycle(bstNode* currDecon) {
 
 void binary_search::set(string keyInsert, int dataInsert){
   //make node to be inserted
+  cout << "Making new Node: " << endl;
   bstNode* temp = new bstNode;
   temp->key  = keyInsert;
   temp->data = dataInsert;
+  cout << "Inserting Node: " << endl;
   if(root == NULL) {
     root = temp;
+    cout << root->key << " " << root << endl;
     lowest = temp;
     highest = temp;
   }
@@ -71,25 +73,23 @@ void binary_search::setCycle(bstNode* currSet, bstNode* tempInsert){
 
 
 int binary_search::find(string keyFind) {
-  char except = 'a';
-  try{
-  int valFound = findCycle(root, keyFind);
-  }
-  catch(except)
-    cerr << "Error #2: No Item Found\n";
+  int valFound;
+  valFound = findCycle(root, keyFind);
+  if(valFound == -1000)
+    cout << "Item not found." << endl;
   return valFound;
 }
 int binary_search::findCycle(bstNode* currFind, string keyFind) {
-  if(currFind == NULL)
-    throw "Error #2: No Item Found\n";
-  else if(currFind->key == keyFind)
-    return currFind->value;
-  else{
+  int found= -1000;
+  if(currFind->key == keyFind)
+    return currFind->data;
+  else {
     if(currFind->key < keyFind)
-      findCycle(currFind->right);
+      findCycle(currFind->right, keyFind);
     else
-      findCycle(currFind->left);
+      findCycle(currFind->left, keyFind);
   }
+  return found;
 }
 
 
@@ -131,7 +131,7 @@ void binary_search::fileCycle(bstNode* currFile, ofstream& fOut) {
 }
 
 
-void binary_search::delete(string keyDelete) {
+void binary_search::deleteItem(string keyDelete) {
   deleteCycle(root, keyDelete);
 }
 void binary_search::deleteCycle(bstNode* currDel, string keyDel) {
@@ -143,7 +143,6 @@ void binary_search::deleteCycle(bstNode* currDel, string keyDel) {
     deleteCycle(currDel->left, keyDel);
   else {
     bstNode* temp= currDel->right;
-
     if(currDel->left==NULL  && currDel->right==NULL) {
       delete currDel;
       currDel = temp;
