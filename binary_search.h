@@ -36,10 +36,10 @@ class binary_search
 
   void deconCycle(bstNode* currDecon);
   void setCycle(bstNode* currSet, bstNode* tempInsert);
-  int findCycle(bstNode* currFind, std::string keyFind);
+  int findCycle(bstNode* currFind, std::string &keyFind);
   void printCycle(bstNode* currPrint);
   void fileCycle(bstNode* currFile, std::ofstream& fOut);
-  void deleteCycle(bstNode* currDel, std::string keyDel);
+  void deleteCycle(bstNode* &currDel, std::string keyDel);
 };
   
 #endif // BINARY_SEARCH_H

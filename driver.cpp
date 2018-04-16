@@ -12,8 +12,8 @@
 using namespace std;
 
 void menuStart(int deter);
-void menuChoice(binary_search bst, int menuRepeat, int action);
-void options(binary_search bst, int action);
+void menuChoice(binary_search &bst, int menuRepeat, int action);
+void options(binary_search &bst, int action);
 
 int main() {
   binary_search bst;
@@ -46,7 +46,7 @@ void menuStart(int deter) {
        << "8. End the Program" << endl;
 }
 
-void menuChoice(binary_search bst, int menuRepeat, int action) {
+void menuChoice(binary_search &bst, int menuRepeat, int action) {
   while(action != 8) {
     options(bst,action);
     cout << "\n\n";
@@ -58,7 +58,7 @@ void menuChoice(binary_search bst, int menuRepeat, int action) {
   cout << "Thank You for using this Program!" << endl;
 }
 
-void options(binary_search bst, int action) {
+void options(binary_search &bst, int action) {
   switch(action) {
     case 1:
       {
@@ -79,6 +79,8 @@ void options(binary_search bst, int action) {
       cout << "\nSearch via key for an item in the list:\n"
 	   << "Please enter the key of the item you are looking for: ";
       cin  >> finding;
+      cout << endl;
+      
       found = bst.find(finding);
       if (found == -1000)
 	cout << "No Item." << endl;

@@ -34,61 +34,86 @@ void binary_search::set(string keyInsert, int dataInsert){
   //make node to be inserted
   cout << "Making new Node: " << endl;
   bstNode* temp = new bstNode;
-  temp->key  = keyInsert;
+  temp->key = keyInsert;
   temp->data = dataInsert;
   cout << "Inserting Node: " << endl;
+  //if root is empty make it equal to temp
   if(root == NULL) {
     root = temp;
-    cout << root->key << " " << root << endl;
     lowest = temp;
     highest = temp;
   }
+  //if the key is less than the current lowest make it the lowest
   else if(temp->key < lowest->key) {
     lowest->left = temp;
     lowest = temp;
   }
+  //if the key is more than the highest make it the highest
   else if(temp->key > highest->key) {
     highest->right = temp;
     highest = temp;
   }
+  //if not root, lowest, or highest then insert using helper
   else
     setCycle(root, temp);
-  
+  cout << "Node Inserted: " << endl;
 }
-void binary_search::setCycle(bstNode* currSet, bstNode* tempInsert){
-  if(currSet == NULL) {
-    currSet = new bstNode;
-    currSet = tempInsert;
-  }
+void binary_search::setCycle(bstNode* currSet, bstNode* tempInsert) {
   //if the key is the same as current
-  else if(tempInsert->key == currSet->key)
-    currSet->data = tempInsert->data;
+  if(tempInsert->data == currSet->data)
+    currSet->key = tempInsert->key;
   //if the key is less than the current
-  else if(tempInsert->key < currSet->key)
-    setCycle(currSet->left, tempInsert);
+  else if(tempInsert->key < currSet->key) {
+    if(currSet->left == NULL)
+      currSet->left = tempInsert;
+    else
+      setCycle(currSet->left, tempInsert);
+  }
   //if the key is more than the current
-  else
-    setCycle(currSet->right, tempInsert);
+  else {
+    if (currSet->right == NULL)
+      currSet->right = tempInsert;
+    else
+      setCycle(currSet->right, tempInsert);
+  }
 }
 
 
 int binary_search::find(string keyFind) {
+  //return value
   int valFound;
-  valFound = findCycle(root, keyFind);
+  cout << "Searching..." << endl;
+  //if the key searched is the lowest
+  if(keyFind == lowest->key)
+    valFound = lowest->data;
+  //if the key searched is the highest
+  else if (keyFind == highest->key)
+    valFound = highest->data;
+  //if it is neither
+  else
+    valFound = findCycle(root, keyFind);
+  //if the value is the default return value. I.E. the not found integer
   if(valFound == -1000)
     cout << "Item not found." << endl;
+  
   return valFound;
 }
-int binary_search::findCycle(bstNode* currFind, string keyFind) {
+int binary_search::findCycle(bstNode* currFind, string &keyFind) {
+  //default return value
   int found= -1000;
-  if(currFind->key == keyFind)
-    return currFind->data;
-  else {
-    if(currFind->key < keyFind)
-      findCycle(currFind->right, keyFind);
-    else
-      findCycle(currFind->left, keyFind);
-  }
+  //if the node is empty
+  if(currFind == NULL)
+    return found;
+  //if the key to find is the current one
+  else if(currFind->key == keyFind)
+    found = currFind->data;
+  //if key to find is greater than the current one
+  else if(currFind->key < keyFind)
+    found = findCycle(currFind->right, keyFind);
+  //if key to find is less than the current one
+  else
+    found = findCycle(currFind->left, keyFind);
+  
   return found;
 }
 
@@ -98,6 +123,7 @@ void binary_search::print() {
   cout << endl;      //used for easier reading
 }
 void binary_search::printCycle(bstNode* currPrint) {
+  //if the current Node is at the end
   if(currPrint != NULL) {
     printCycle(currPrint->left);                                          //move left, if can
     cout << "( " << currPrint->key << ", " << currPrint->data << " )\n";  //print itself
@@ -122,7 +148,7 @@ void binary_search::save_file(string fileInsert) {
   fileCycle(root, fOut);
   fOut.close();
 }
-void binary_search::fileCycle(bstNode* currFile, ofstream& fOut) {
+void binary_search::fileCycle(bstNode* currFile, ofstream &fOut) {
   if(currFile != NULL) {
     fileCycle(currFile->left, fOut);
     fOut << currFile->key << " " << currFile->data << '\n';
@@ -134,33 +160,56 @@ void binary_search::fileCycle(bstNode* currFile, ofstream& fOut) {
 void binary_search::deleteItem(string keyDelete) {
   deleteCycle(root, keyDelete);
 }
-void binary_search::deleteCycle(bstNode* currDel, string keyDel) {
+void binary_search::deleteCycle(bstNode* &currDel, string keyDel) {
+
+  //if root is NULL or later cycles don't find the key
   if (currDel == NULL)
     cout << "Error #1: Key Not Found." << endl;
+
+  //if the key to be deleted is greater than the current key
   else if(currDel->key < keyDel)
     deleteCycle(currDel->right, keyDel);
+  
+  //if the key to be deleted is less than the current key
   else if(currDel->key > keyDel)
     deleteCycle(currDel->left, keyDel);
+  
+  //if the current key is the key to be deleted
   else {
-    bstNode* temp= currDel->right;
-    if(currDel->left==NULL  && currDel->right==NULL) {
+    //temp is the replacement for the deleting node
+    bstNode* temp;
+    if(currDel->left == NULL && currDel->right == NULL)
+      currDel = NULL;
+    //if the current left is NULL
+    else if(currDel->left==NULL) {
+      temp = currDel->right;
       delete currDel;
       currDel = temp;
     }
-    else if(currDel->right != NULL && currDel->left == NULL) {
-      delete currDel;
-      currDel = temp;
-    }
-    else if(currDel->left != NULL && currDel->right == NULL) {
+    //if the current right is NULL, but the left is not
+    else if(currDel->right == NULL) {
       temp = currDel->left;
       delete currDel;
       currDel = temp;
     }
+    //if the current has both left & right
     else {
-      while(temp->left != NULL)
+      bstNode* stem;
+      temp= currDel->right;
+      stem= NULL;
+      //setting temp to the lowest right stems
+      while(temp->left != NULL) {
+	stem = temp;
 	temp = temp->left;
+      }
+      //setting the to be deleted to the leftmost right stem
       currDel->key = temp->key;
       currDel->data = temp->data;
+      //deleting the leftmost
+      if(stem != NULL)
+	deleteCycle(stem->left, stem->left->key);
+      else
+	deleteCycle(currDel->right, currDel->right->key);
     }
   }
 }
